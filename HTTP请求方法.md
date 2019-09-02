@@ -31,6 +31,9 @@ HTTP响应头信息详细介绍：
 - Expires : 应该在什么时候人为文档已经过期，从而不再缓存它？
 - Last-Modified : 文档的最后改动时间。客户可以通过 if-Modified-Since请求头提供一个日期，该请求将被视为一个条件的GET，只有改动时间迟于指定时间的文档才会返回，否则返回一个304（NOT Modified）状态。Last-Modified也可用setDateHeader方法来设置。
 - Location : 表示客户应当到哪里去取文档。Location通常不是直接设置的，而是通过HttpServletResponse的sendRedirect方法，该方法同时设置状态码为 302。
-- 表示浏览器应该在多少时间之后刷新文档，以秒计。除了刷新当前文档之外，你还可以通过setHeader("Refresh","5; URL=http://host/path") 让浏览器读取指定的页面。  注意在这种功能通常是通过设置HTML页面HEAD区的<META HTTP-EQUIV="Refresh" CONTENT="5;URL=http://host/path"> 实现，这是因为，自动刷新或重定向对于那些不能使用CGI或Servlet的HTML编写者十分重要。但是，对于Servlet来说，直接设置Refresh 头更加方便。   注意Refresh的意义是"N秒之后刷新本页面或者访问指定页面"，而不是"每隔N秒"
+- 表示浏览器应该在多少时间之后刷新文档，以秒计。除了刷新当前文档之外，你还可以通过setHeader("Refresh","5; URL=http://host/path") 让浏览器读取指定的页面。  **注意** 在这种功能通常是通过设置HTML页面HEAD区的<META HTTP-EQUIV="Refresh" CONTENT="5;URL=http://host/path"> 实现，这是因为，自动刷新或重定向对于那些不能使用CGI或Servlet的HTML编写者十分重要。但是，对于Servlet来说，直接设置Refresh 头更加方便。   注意Refresh的意义是"N秒之后刷新本页面或者访问指定页面"，而不是"每隔N秒刷新本页面或访问指定页面"。因此，连续刷新要求每次都发送一个Refresh头，而发送204状态代码则可以组织浏览器联系刷新，不管是使用Refresh头还是<META HTTP-EQUIV="Refresh"...>。   **注意** Refresh头不属于 HTTP1.1正式规范的一部分，而是一个扩展，但Netscape和IE都支持他。
+- Server : 服务器名字。Servlet 一般不设置这个值，而是由Web服务器自己设置。
+- Set-Cookie : 设置和页面关联的Cookie。Servlet不应使用response.setHeader("Set-Cookie",...),而是应使用HttpServletResponse 提供的专用方法 addCookie。参见下文有关Cookie设置的讨论。
+- WWW-Authenticate : 客户应该在 Authorization 头中提供什么类型的授权信息？在包含 401（Unauthorized） 状态行的应答中这个头是必须的，例如：response.setHeader("WWW-Authenticate","BASIC realm = \"executives\"")。**注意** Servlet 一般不进行着方面的处理，而是让Web服务器专门机制来控制受密码保护页面的访问（例如：.htaccess）
 
 
