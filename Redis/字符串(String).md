@@ -23,4 +23,4 @@
 - SETTNX key value : 只有在 key 不存在时设置 key 的值。
 - STRLEN key : 返回 key 储存的字符串值的长度。
 - MSET key value [key value...] : 同时设置一个或多个key-value 对，当且仅当所有给定的key都不存在。
-- 
+- MSETNX key milliseconds value : 这个命令和 SETEX 命令相似，但它以毫秒为单位设置 key的生存时间,而不是像 SETEX 命令那样，以秒为单位。
