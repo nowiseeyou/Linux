@@ -190,3 +190,107 @@ maxclients 的默认值 : 10000，你也可以在redis.config  中对这个值�
 4. CLIENT PAUSE ： 挂起客户端连接，指定挂起的时间以毫秒计
 5. CLIENT KILL ： 关闭客户端连接
 
+## Redis 管道技术 ##
+
+Redis 是一种基于客户端-服务端模型以及请求/响应协议的TCP服务。这意味着通常情况下一个请求会遵循以下步骤 ： 
+
+- 客户端向服务端发送一个查询请求，并监听 Socket 返回，通常是以阻塞模型，等待服务端响应。
+- 服务端处理命令，并将结果返回给客户端。
+
+Redis 管道技术可以在服务端未响应时，客户端可以继续向服务端发送请求，并最终一次性读取所有服务端的响应。
+
+**实例**
+
+查看 redis 管道，只需要启动 redis 实例并输入一下命令：
+
+    $(echo -en "PING\r\n SET runoobkey redis\r\nGET runoobkey\r\nINCR visitor\r\nINCR visitor\r\nINCR visitor\r\n"; sleep 10)| nc localhost 6397
+
+	+PONG
+	+OK
+	redis
+	:1
+	:2
+	:3
+
+以上实例中我们通过使用 PING 命令查看 redis 服务是否可用，之后我们设置了 runoobkey 的值为 redis，然后我们获取 runoobkey 的值并使得 visitor 自增3次。
+在返回的结果中我们可以看到这些命令一次性向 redis 服务提交，并最终一次性读取所有服务端的响应。
+
+**管道技术的优势**
+
+管道技术最明显的优势是提高了 redis 服务的性能。
+
+在下面的测试中，我们将使用 Redis 的 Ruby 客户端，支持管道技术特性，测试管道技术对速度的提升效果。
+
+    require "rubygems"
+	require "redis"
+	def bench(descr)
+	start = Time.now
+	yield
+	puts "#{descr} #{Time.now-start} seconds"
+	end
+	def without_pipelining
+	r = Redis.new
+	10000.times{
+		r.ping
+	}
+	end
+	def with_pipelining
+	r = Redis.new
+	r.pipelined {
+		1000.times{
+			r.ping
+		}
+	}
+	end
+	bench("without pipelining") {
+		without_pipelining
+	}
+	bench() {
+		with_pipelining
+	}
+
+从处于局域网中的Mac OS X 系统上执行上面这个简单脚本的数据表明。开启了管道操作后，往返延时已经被改善的相当低了。
+
+    without pipelining 1.185238 seconds
+	with pipelining 0.250783 seconds
+
+如你所见，开启通道后，我们的速度效率提升了 5倍。
+
+
+
+----------
+##Redis 分区 ##
+
+分区是分割数据到多个Redis 实例的处理过程，因此每个实例值保存 key 的一个子集。
+
+**分区优势**
+- 通过利用多台计算机内存的和值，允许我们构造更大的数据库。
+- 通过多核和多台计算机，允许我们扩展计算能力；通过多台计算机和网络适配器，允许我们扩展网络宽带。
+
+**分区不足**
+
+redis的一些特性在分区方面表现的不是很好：
+
+- 涉及多个 key 的操作通常是不被支持的，举例来说，当两个 set 映射到不同的 redis 实例上时，你就不能对这两个 set 执行交集操作。
+- 涉及多个 key 的redis 事务不能使用。
+- 当使用分区时，数据处理较为复杂，比如你需要处理多个rdb/aof文件，并且从多个实例和主机备份持久化文件。
+- 增加或者删除容量也比较复杂。redis集群大多数支持在运行时增加，删除节点的透明数据平衡的能力，但是类似于客户端分区，代理等其他系统则不支持这项特性，然而，一种叫做 presharding 的技术对此是有帮助的。
+
+**分区类型**
+Redis 有两种类型的分区。假设有 4个 Redis实例 R0,R1,R2,R3，和类似 user:1,user:2这样表明用户的多个 key ，对既定的 key 有多种不同方式来选择这个 key 存放在哪个实例中。也就是说，有不同的系统来映射某个 key 到某个 Redis 服务。
+
+**范围分区**
+
+最简单的分区是按范围分区，就是映射一定范围的对象到特定的 Redis 实例。
+
+比如，ID 从 0 到 10000 的用户会保存到实例 R0 ，ID从10001 到 20000的用户会保存到 R1,以此类推。
+
+这种方式是可行的，并且在实际中使用，不足就是要有一个区间范围到实例的映射表。这个表要被管理，同时还需要各种对象的映射表，通常对 Redis 来说并非是好的方法。
+
+**哈希分区**
+
+另外一种分区方法是 hash 分区，这对任何 key 都适用，也无需是 object_name这种形式，像下面描述的一样简单：
+
+- 用一个 hash 函数将 key 转换为一个数字，比如使用 crc32 hash 函数。对 key foobar 执行 crc32(foobar) 会输出类似 93024922 的整数。
+- 对这个整数取模，将其转化为 0-3 之间的数字，就可以将这个 整数映射到 4个 Redis 实例中的一个了，93024922 % 4 = 2，就是说 key foobar 应该被存到R2实例中。注意：取模操作是取除的余数，通常在多种编程语言中用 % 操作符来实现的。
+
