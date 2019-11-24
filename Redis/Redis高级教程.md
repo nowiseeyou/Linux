@@ -1,6 +1,7 @@
 # Redis 高级教程 #
 
 ----------
+    KEYS *:获取redis所有key
 
 
 ## Redis数据备份与恢复 ##
