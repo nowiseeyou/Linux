@@ -32,3 +32,9 @@ git config --global credential.helper store
 	touch .git-credentials
 	vim .git-credentials
 			https://{username}:{password}@github.com
+
+	// Linux ： git 命令行的颜色配置
+	git config --global color.status auto	
+	git config --global color.diff auto
+	git config --global color.branch auto
+	git config --global color.interactive auto
