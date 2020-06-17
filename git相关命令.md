@@ -10,6 +10,8 @@
 	git rm web/z1.php 			
 	git commit -m "修改的内容"
 	git push -u origin berry001
+	git stash && git checkout master && git branch | grep -v "master" | xargs git branch -D  //删除除了master外的所有分支
+	git stash : 备份分支修改
 
 	git remote add origin https://github.com/nowiseeyou/golang.git	//创建远程仓库地址
 	git remote -v	//查看远程仓库地址
