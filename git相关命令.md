@@ -22,6 +22,10 @@
 	git checkout master
 	git reset --hard
 
+	# 拉取分支
+	git fetch  origin xx
+	git pull   origin xx
+
 添加Git Config 内容
 进入git bash终端， 输入如下命令：
 git config --global credential.helper store
