@@ -35,12 +35,12 @@ git config --global credential.helper store
 
 
 	
-	/*git push 免输入用户名 密码*/
+	# git push 免输入 用户名 密码
 	touch .git-credentials
 	vim .git-credentials
 			https://{username}:{password}@github.com
 
-	// Linux ： git 命令行的颜色配置
+	# Linux ： git 命令行的颜色配置
 	git config --global color.status auto	
 	git config --global color.diff auto
 	git config --global color.branch auto
