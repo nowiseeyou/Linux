@@ -1,3 +1,26 @@
+## 解决git 发访问问题 ##
+
+# IP1
+		https://github.com.ipaddress.com/	
+# IP2
+		https://fastly.net.ipaddress.com/github.global.ssl.fastly.net#ipinfo 
+#IP3(一组)
+		https://github.com.ipaddress.com/assets-cdn.github.com 
+
+# hosts
+		140.82.113.4(IP1 Address) github.com 
+		199.232.69.194(IP2 Address) github.global.ssl.fastly.net
+		185.199.108.153(IP3 Address)  assets-cdn.github.com
+		185.199.109.153(IP3 Address)  assets-cdn.github.com
+		185.199.110.153(IP3 Address)  assets-cdn.github.com
+		185.199.111.153(IP3 Address)  assets-cdn.github.com
+
+作者：发烂渣Dev
+链接：https://juejin.cn/post/6844904193170341896
+来源：掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+	
+
 ## git 相关命令 ##
 	
     git rm -r --cache a/2.txt	//删除a目录下的2.txt文件
