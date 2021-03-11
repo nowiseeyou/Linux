@@ -14,11 +14,6 @@
 		185.199.109.153(IP3 Address)  assets-cdn.github.com
 		185.199.110.153(IP3 Address)  assets-cdn.github.com
 		185.199.111.153(IP3 Address)  assets-cdn.github.com
-
-作者：发烂渣Dev
-链接：https://juejin.cn/post/6844904193170341896
-来源：掘金
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 	
 
 ## git 相关命令 ##
@@ -50,10 +45,13 @@
 	git pull   origin xx
 
 添加Git Config 内容
+
 进入git bash终端， 输入如下命令：
-git config --global credential.helper store
+	git config --global credential.helper store
+
 执行完后查看%HOME%目录下的.gitconfig文件，会多了一项：
-[credential] helper = store
+	[credential] helper = store
+
 重新开启git bash会发现git push时不用再输入用户名和密码
 
 
