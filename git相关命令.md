@@ -1,11 +1,16 @@
 ## 解决git 发访问问题 ##
 
 # IP1
-		https://github.com.ipaddress.com/	
+	
+	https://github.com.ipaddress.com/	
+
 # IP2
-		https://fastly.net.ipaddress.com/github.global.ssl.fastly.net#ipinfo 
+
+	https://fastly.net.ipaddress.com/github.global.ssl.fastly.net#ipinfo 
+
 #IP3(一组)
-		https://github.com.ipaddress.com/assets-cdn.github.com 
+		
+	https://github.com.ipaddress.com/assets-cdn.github.com 
 
 # hosts
 		140.82.113.4(IP1 Address) github.com 
