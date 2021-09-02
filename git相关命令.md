@@ -71,3 +71,38 @@
 	git config --global color.diff auto
 	git config --global color.branch auto
 	git config --global color.interactive auto
+
+获取当前登陆用户：
+
+	git config user.name   //获取当前登录的用户
+	git config user.email  //获取当前登录用户的邮箱
+
+
+修改登陆用户：
+
+	git config --global user.name 'userName'    // 修改登陆账号，userName为你的git账号
+	git config --global user.email 'email'      // 修改登陆邮箱，email为你的git邮箱
+	git config --global user.password 'password'  // 修改登陆密码，password为你的git密码
+
+
+配置用户名和邮箱：
+
+	git config --global user.name "username"
+	git config --global user.email "useremail@qq.com"
+
+清除配置中纪录的用户名和密码，下次提交代码时会让重新输入账号密码：
+
+	git config --system --unset credential.helper
+
+查看git配置信息
+
+	git config --list
+
+执行命令之后，再次pull或push时会缓存输入的用户名和密码：
+
+	git config --global credential.helper store
+
+
+清除git缓存中的用户名的密码
+
+	git credential-manager uninstall
