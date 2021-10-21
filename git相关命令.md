@@ -111,3 +111,17 @@
 
 	git --version
 	git update-git-for-windows
+
+
+###解决冲突：###
+A分支 合并 test 冲突。
+
+1. 切换到test 分支  : git check out test
+2. 拉取test 最新代码 ： git pull
+3. 将A分支合并到 test : git merge A
+4. 观察控制台 会提示冲突文件。
+5. 打开冲突文件，修改冲突
+6. 提交test 分支 ： git commit test && git pull test
+	git add .
+	git commit -m
+	git push
